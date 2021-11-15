@@ -1,0 +1,28 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "cimpress-atsquad"
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "requireConfigFile": false
+  },
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "indent": ["error", 2, { "SwitchCase": 1, "MemberExpression": "off" }],
+    "node/no-unsupported-features/es-syntax": ["off"],
+    "no-throw-literal": "off",
+    "spaced-comment": "off",
+    "no-continue": "off",
+    "require-atomic-updates": "off",
+    "no-constant-condition": ["error", { "checkLoops": false }],
+    "node/no-missing-require": ["error", {
+      "allowModules": ["jose"]
+    }]
+  }
+}
