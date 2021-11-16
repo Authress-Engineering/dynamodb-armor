@@ -1,7 +1,7 @@
 {
   "name": "dynamodb-armor",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "DynamoDB Armor provides a drop-in replacement removing all the hidden traps with the DynamoDB SDK. You won't even notice it!",
   "main": "./src/dynamoDbSafe.js",
   "types": "./index.d.ts",
   "files": [
@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "lint": "eslint --ext .js,.ts src tests make.js",
-    "test": "check-dts index.d.ts && mocha tests/**/*.test.js -R spec"
+    "validate-types": "check-dts index.d.ts",
+    "test": "mocha tests/**/*.test.js -R spec"
   },
   "peerDependencies": {
     "aws-sdk": "<=3"
@@ -18,9 +19,13 @@
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/eslint-parser": "^7.15.8",
+    "@types/node": "^16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
     "aws-architect": "^6.6.10",
     "aws-sdk": "^2.1028.0",
     "chai": "^4.2.0",
+    "check-dts": "^0.4.4",
     "ci-build-tools": "^1.0.13",
     "commander": "^4.0.1",
     "eslint": "^7.20.0",
@@ -33,8 +38,10 @@
     "glob": "^7.1.6",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
+    "nyc": "^15.1.0",
     "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "typescript": "^4.4.4"
   },
   "repository": {
     "type": "git",
@@ -42,6 +49,8 @@
   },
   "keywords": [
     "DynamoDB",
+    "DynamoDB Armor",
+    "DynamoDB Default",
     "DynamoDB protection",
     "AWS",
     "AWS DynamoDB",
@@ -56,6 +65,6 @@
   },
   "homepage": "https://authress.io",
   "engines": {
-    "node": ">=10.12"
+    "node": ">=12.22"
   }
 }
