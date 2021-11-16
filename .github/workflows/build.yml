@@ -21,7 +21,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
 
     - name: Install packages
-      run: npm install
+      run: yarn --frozen-lockfile
     - name: Run build
       run: node make.js build
     - name: Test

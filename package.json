@@ -45,7 +45,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Authress/authress-login.js"
+    "url": "git+https://github.com/Rhosys/dynamodb-armor"
   },
   "keywords": [
     "DynamoDB",
@@ -58,12 +58,12 @@
     "DynamoDB security",
     "DynamoDB fixes"
   ],
-  "author": "Authress Developers <developers@authress.io> (https://authress.io)",
+  "author": "Rhosys Developers <developers@rhosys.ch> (https://rhosys.ch)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/rhosys/dynamodb-armor/issues"
+    "url": "https://github.com/Rhosys/dynamodb-armor/issues"
   },
-  "homepage": "https://authress.io",
+  "homepage": "https://rhosys.ch",
   "engines": {
     "node": ">=12.22"
   }
