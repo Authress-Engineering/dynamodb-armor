@@ -1,6 +1,8 @@
 # dynamodb-armor
 Drop in replacement for DynamoDB, 100% compatible, protects against common production problems.
 
+[![npm version](https://badge.fury.io/js/dynamodb-armor.svg)](https://badge.fury.io/js/dynamodb-armor)
+
 ## Setup
 * `npm i --save dynamodb-armor`
 * Use the builtin client instead of the one from the AWS SDK.
@@ -25,7 +27,9 @@ const params = {
   }
 };
 
-await dynamoDbClient.update(params); // That's right you don't even need the .promise() anymore, or leave it in if you feel like it
+// That's right you don't even need the .promise() anymore
+//  or leave it in if you feel like it.
+await dynamoDbClient.update(params);
 ```
 
 ## Here's all the things you don't need to think about
