@@ -1,7 +1,9 @@
 # dynamodb-armor
 Drop in replacement for DynamoDB, 100% compatible, protects against common production problems.
 
-[![npm version](https://badge.fury.io/js/dynamodb-armor.svg)](https://badge.fury.io/js/dynamodb-armor)
+This is an open source project managed by the [Authress Engineering team](https://authress.io).
+
+[![npm version](https://badge.fury.io/js/dynamodb-armor.svg)](https://badge.fury.io/js/dynamodb-armor) [![Authress Engineering - DynamoDB-Armor](https://img.shields.io/static/v1?label=Authress+Engineering&message=DynamoDB-Armor&color=%23FBAF0B&logo=androidauto&logoColor=%23FBAF0B)](https://authress.io)
 
 ## Setup
 * `npm i --save dynamodb-armor`
