@@ -81,7 +81,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
 
   query(originalParams) {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
-    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.KeyConditionExpression) { throw new DynamoDbError({ error: 'KeyConditionExpression not specified', parameters: originalParams }, 'InvalidParameters'); }
 
     const params = originalParams;
     const capturedStack = { name: 'DynamoDB.update() Error:' };
@@ -122,7 +122,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
 
   put(originalParams) {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
-    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.Item) { throw new DynamoDbError({ error: 'Item not specified', parameters: originalParams }, 'InvalidParameters'); }
 
     const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
     if (conditionExpressionTokens) {
