@@ -1,9 +1,6 @@
-const { DynamoDB: DynamoDbOriginal, config } = require('aws-sdk');
+const DynamoDbOriginal = require('aws-sdk/clients/dynamodb');
 
 process.env.AWS_NODEJS_CONNECTION_REUSE_ENABLED = 1;
-require('http').globalAgent.keepAlive = true;
-require('https').globalAgent.keepAlive = true;
-config.update({ maxRetries: 5, httpOptions: { connectTimeout: 1000, timeout: 10000 } });
 
 const DynamoDbError = require('./dynamoDbError');
 
