@@ -14,6 +14,15 @@
       "program": "${workspaceFolder}/node_modules/nodemon/bin/nodemon",
       "args": ["${workspaceFolder}/make.js", "run"],
       "cwd": "${workspaceFolder}/src/"
-    }
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "Debug tests",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "command": "npm test"
+    },
   ]
 }

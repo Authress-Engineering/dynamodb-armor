@@ -39,5 +39,71 @@ describe('dynamoDbArmor.js', () => {
         expect(error.message).to.eql(null, JSON.stringify(error.message, null, 2));
       }
     });
+
+    it('Validate multi SET', async () => {
+      const testTable = 'Test-TableId';
+      const testHash = 'testHash';
+      const testRange = 'testRange';
+      const params = {
+        TableName: testTable,
+        Key: {
+          hash: testHash,
+          rang: testRange
+        },
+        UpdateExpression: 'SET #key = :value, #b = :c DELETE #remove = :deletedValue',
+        ConditionExpression: 'attribute_exists(hash)',
+        ExpressionAttributeNames: {
+          '#key': 'key',
+          '#b': 'b',
+          '#remove': 'remove'
+        },
+        ExpressionAttributeValues: {
+          ':value': 'value',
+          ':c': 'c',
+          ':deletedValue': 'oldValue'
+        }
+      };
+      try {
+        const dynamoDbOriginalMock = sandbox.mock(DynamoDbOriginal.DocumentClient.prototype);
+        dynamoDbOriginalMock.expects('update').once().returns({ promise() { return Promise.resolve(); } });
+        await new DynamoDB().update(params);
+        dynamoDbOriginalMock.verify();
+      } catch (error) {
+        expect(error.message).to.eql(null, JSON.stringify(error.message, null, 2));
+      }
+    });
+
+    it('Validate multi DELETE', async () => {
+      const testTable = 'Test-TableId';
+      const testHash = 'testHash';
+      const testRange = 'testRange';
+      const params = {
+        TableName: testTable,
+        Key: {
+          hash: testHash,
+          rang: testRange
+        },
+        UpdateExpression: 'DELETE #remove = :deletedValue',
+        ConditionExpression: 'attribute_exists(hash)',
+        ExpressionAttributeNames: {
+          '#key': 'key',
+          '#b': 'b',
+          '#remove': 'remove'
+        },
+        ExpressionAttributeValues: {
+          ':value': 'value',
+          ':c': 'c',
+          ':deletedValue': 'oldValue'
+        }
+      };
+      try {
+        const dynamoDbOriginalMock = sandbox.mock(DynamoDbOriginal.DocumentClient.prototype);
+        dynamoDbOriginalMock.expects('update').once().returns({ promise() { return Promise.resolve(); } });
+        await new DynamoDB().update(params);
+        dynamoDbOriginalMock.verify();
+      } catch (error) {
+        expect(error.message).to.eql(null, JSON.stringify(error.message, null, 2));
+      }
+    });
   });
 });

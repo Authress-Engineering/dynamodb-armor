@@ -23,36 +23,6 @@ function parseExpression(logger, expression, isMultiExpression) {
     }, 'InvalidExpression');
   }
 
-  const setExpression = partialExpressions.find(e => e.match(/^SET/i));
-  if (setExpression) {
-    // validate the set expression
-  }
-
-  const isValidKey = operand => operand.match(/^#\w+(\.#\w)*$/);
-  const isValidOperand = operand => operand.match(/^:\w+$/) || operand.match(/^(#\w+(\.#\w)*|:\w+)[-+](#\w+(\.#\w)*|:\w+)$/);
-  
-  const arrayIterator = orderedTokens[Symbol.iterator]();
-  let result;
-  
-  while ((result = arrayIterator.next()) && !result.done) {
-    const token = result.value;
-    if (token.match(/^SET$/i)) {
-      const key = arrayIterator.next().value;
-      const equalSign = arrayIterator.next().value;
-      const operand = arrayIterator.next().value;
-
-      if (!isValidKey(key) || equalSign !== '=' || !isValidOperand(operand)) {
-        logger({ code: 'InvalidExpression', expression });
-        throw new DynamoDbError({
-          title: 'Invalid Expression: the expression does not match what DynamoDB expects: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html', expression,
-          tokens: [key, equalSign, operand]
-        }, 'InvalidExpression');
-      }
-    }
-    
-    // parseExpressionRecursive(token, orderedTokens);
-  }
-
   return { keys: {}, values: {} };
 }
 class DynamoDB extends DynamoDbOriginal.DocumentClient {
