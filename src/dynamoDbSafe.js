@@ -5,7 +5,7 @@ process.env.AWS_NODEJS_CONNECTION_REUSE_ENABLED = 1;
 const DynamoDbError = require('./dynamoDbError');
 
 // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html#Expressions.UpdateExpressions.DELETE
-function parseExpression(expression, isMultiExpression) {
+function parseExpression(logger, expression, isMultiExpression) {
   const orderedTokens = (expression || '').trim().split(' ').filter(token => token).map(token => token.trim());
 
   let currentExpressionCounter = isMultiExpression ? -1 : 0;
@@ -42,7 +42,7 @@ function parseExpression(expression, isMultiExpression) {
       const operand = arrayIterator.next().value;
 
       if (!isValidKey(key) || equalSign !== '=' || !isValidOperand(operand)) {
-        this.logger({ code: 'InvalidExpression', expression });
+        logger({ code: 'InvalidExpression', expression });
         throw new DynamoDbError({
           title: 'Invalid Expression: the expression does not match what DynamoDB expects: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html', expression,
           tokens: [key, equalSign, operand]
@@ -101,7 +101,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
     if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
 
-    const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
+    const conditionExpressionTokens = parseExpression(this.logger, originalParams.ConditionExpression);
     if (conditionExpressionTokens) {
       // Validate the tokens
     }
@@ -124,7 +124,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
     if (!originalParams.Item) { throw new DynamoDbError({ error: 'Item not specified', parameters: originalParams }, 'InvalidParameters'); }
 
-    const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
+    const conditionExpressionTokens = parseExpression(this.logger, originalParams.ConditionExpression);
     if (conditionExpressionTokens) {
       // Validate the tokens
     }
@@ -166,8 +166,8 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (!originalParams.UpdateExpression) { throw new DynamoDbError({ error: 'UpdateExpression not specified', parameters: originalParams }, 'InvalidParameters'); }
 
     // update, put related
-    const updateExpressionTokens = parseExpression(originalParams.UpdateExpression, true);
-    const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
+    const updateExpressionTokens = parseExpression(this.logger, originalParams.UpdateExpression, true);
+    const conditionExpressionTokens = parseExpression(this.logger, originalParams.ConditionExpression);
     if (updateExpressionTokens || conditionExpressionTokens) {
       // Validate the tokens
     }
