@@ -12,7 +12,7 @@ This is an open source project managed by the [Authress Engineering team](https:
 ```js
 const { DynamoDB } = require('dynamodb-armor');
 
-const dynamoDbClient = new DynamoDB.DocumentClient({});
+const dynamoDbClient = new DynamoDB({});
 const params = {
   TableName: dynamoDbTable,
   Key: {
