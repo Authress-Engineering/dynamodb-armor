@@ -65,6 +65,6 @@
   },
   "homepage": "https://rhosys.ch",
   "engines": {
-    "node": ">=12.22"
+    "node": ">=16"
   }
 }

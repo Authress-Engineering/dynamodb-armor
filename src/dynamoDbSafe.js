@@ -26,8 +26,6 @@ function parseExpression(expression, isMultiExpression) {
     }, 'InvalidExpression');
   }
 
-  // TODO: merge together repeated actions since DDB doesn't accept "SET operand SET operand"
-
   const setExpression = partialExpressions.find(e => e.match(/^SET/i));
   if (setExpression) {
     // validate the set expression
@@ -66,10 +64,104 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     this.logger = args && args.logger || (() => {});
   }
 
-  // get
-  // query
-  // delete
-  // put
+  get(originalParams) {
+    if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+
+    const params = originalParams;
+    const capturedStack = { name: 'DynamoDB.update() Error:' };
+    Error.captureStackTrace(capturedStack);
+    const resultAsync = super.get(params).promise().catch(error => {
+      const wrappedError = new DynamoDbError({ message: error.message, method: 'Get', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
+      wrappedError.stack = capturedStack;
+      throw wrappedError;
+    });
+    resultAsync.promise = () => resultAsync;
+    // Prevent unhandled promise rejections
+    resultAsync.catch(() => {});
+    return resultAsync;
+  }
+
+  query(originalParams) {
+    if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+
+    const params = originalParams;
+    const capturedStack = { name: 'DynamoDB.update() Error:' };
+    Error.captureStackTrace(capturedStack);
+    const resultAsync = super.delete(params).promise().catch(error => {
+      const wrappedError = new DynamoDbError({ message: error.message, method: 'Query', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
+      wrappedError.stack = capturedStack;
+      throw wrappedError;
+    });
+    resultAsync.promise = () => resultAsync;
+    // Prevent unhandled promise rejections
+    resultAsync.catch(() => {});
+    return resultAsync;
+  }
+
+  delete(originalParams) {
+    if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+
+    const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
+    if (conditionExpressionTokens) {
+      // Validate the tokens
+    }
+
+    const params = originalParams;
+    const capturedStack = { name: 'DynamoDB.update() Error:' };
+    Error.captureStackTrace(capturedStack);
+    const resultAsync = super.delete(params).promise().catch(error => {
+      const wrappedError = new DynamoDbError({ message: error.message, method: 'Delete', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
+      wrappedError.stack = capturedStack;
+      throw wrappedError;
+    });
+    resultAsync.promise = () => resultAsync;
+    // Prevent unhandled promise rejections
+    resultAsync.catch(() => {});
+    return resultAsync;
+  }
+
+  put(originalParams) {
+    if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
+    if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
+
+    const conditionExpressionTokens = parseExpression(originalParams.ConditionExpression);
+    if (conditionExpressionTokens) {
+      // Validate the tokens
+    }
+
+    const params = originalParams;
+    const capturedStack = { name: 'DynamoDB.update() Error:' };
+    Error.captureStackTrace(capturedStack);
+    const resultAsync = super.put(params).promise().catch(error => {
+      const wrappedError = new DynamoDbError({ message: error.message, method: 'Put', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
+      wrappedError.stack = capturedStack;
+      throw wrappedError;
+    });
+    resultAsync.promise = () => resultAsync;
+    // Prevent unhandled promise rejections
+    resultAsync.catch(() => {});
+    return resultAsync;
+  }
+
+  scan(originalParams) {
+    if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
+
+    const params = originalParams;
+    const capturedStack = { name: 'DynamoDB.update() Error:' };
+    Error.captureStackTrace(capturedStack);
+    const resultAsync = super.scan(params).promise().catch(error => {
+      const wrappedError = new DynamoDbError({ message: error.message, method: 'Scan', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
+      wrappedError.stack = capturedStack;
+      throw wrappedError;
+    });
+    resultAsync.promise = () => resultAsync;
+    // Prevent unhandled promise rejections
+    resultAsync.catch(() => {});
+    return resultAsync;
+  }
 
   update(originalParams) {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
@@ -82,17 +174,6 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (updateExpressionTokens || conditionExpressionTokens) {
       // Validate the tokens
     }
-    
-    // query related
-    // const keyExpressionTokens = parseExpression(originalParams.KeyConditionExpression);
-    // const filterExpressionTokens = parseExpression(originalParams.FilterExpression);
-    // const matchingFilterExpressionKey = Object.keys(filterExpressionTokens.keys).some(filterKey => Object.keys(keyExpressionTokens.keys)
-    // .some(keyKey => originalParams.ExpressionAttributeNames[keyKey] === originalParams.ExpressionAttributeNames[filterKey]));
-    
-    // // TODO: convert this from a error generation to in memory filtering
-    // if (matchingFilterExpressionKey) {
-    //   throw new DynamoDbError({ title: 'DynamoDB disallows having a FilterExpression contain ', key: matchingFilterExpressionKey, parameters: originalParams }, 'InvalidExpression');
-    // }
 
     const params = originalParams;
     const capturedStack = { name: 'DynamoDB.update() Error:' };
