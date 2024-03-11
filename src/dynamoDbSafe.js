@@ -56,7 +56,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     const params = originalParams;
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
-    const resultAsync = super.delete(params).promise().catch(error => {
+    const resultAsync = super.query(params).promise().catch(error => {
       const wrappedError = new DynamoDbError({ message: error.message, method: 'Query', parameters: originalParams, dynamoDbStack: error.stack }, error.code);
       wrappedError.stack = capturedStack;
       throw wrappedError;
