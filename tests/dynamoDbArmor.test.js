@@ -40,6 +40,64 @@ describe('dynamoDbArmor.js', () => {
       }
     });
 
+    it('Validate single SET using inner DocumentClient', async () => {
+      const testTable = 'Test-TableId';
+      const testHash = 'testHash';
+      const testRange = 'testRange';
+      const params = {
+        TableName: testTable,
+        Key: {
+          hash: testHash,
+          rang: testRange
+        },
+        UpdateExpression: 'SET #key = :value',
+        ConditionExpression: 'attribute_exists(hash)',
+        ExpressionAttributeNames: {
+          '#key': 'key'
+        },
+        ExpressionAttributeValues: {
+          ':value': 'value'
+        }
+      };
+      try {
+        const dynamoDbOriginalMock = sandbox.mock(DynamoDbOriginal.DocumentClient.prototype);
+        dynamoDbOriginalMock.expects('update').once().returns({ promise() { return Promise.resolve(); } });
+        await new DynamoDB.DocumentClient().update(params);
+        dynamoDbOriginalMock.verify();
+      } catch (error) {
+        expect(error.message).to.eql(null, JSON.stringify(error.message, null, 2));
+      }
+    });
+
+    it('Validate single SET using inner DocumentClient and unnecessary .promise()', async () => {
+      const testTable = 'Test-TableId';
+      const testHash = 'testHash';
+      const testRange = 'testRange';
+      const params = {
+        TableName: testTable,
+        Key: {
+          hash: testHash,
+          rang: testRange
+        },
+        UpdateExpression: 'SET #key = :value',
+        ConditionExpression: 'attribute_exists(hash)',
+        ExpressionAttributeNames: {
+          '#key': 'key'
+        },
+        ExpressionAttributeValues: {
+          ':value': 'value'
+        }
+      };
+      try {
+        const dynamoDbOriginalMock = sandbox.mock(DynamoDbOriginal.DocumentClient.prototype);
+        dynamoDbOriginalMock.expects('update').once().returns({ promise() { return Promise.resolve(); } });
+        await new DynamoDB.DocumentClient().update(params).promise();
+        dynamoDbOriginalMock.verify();
+      } catch (error) {
+        expect(error.message).to.eql(null, JSON.stringify(error.message, null, 2));
+      }
+    });
+
     it('Validate multi SET', async () => {
       const testTable = 'Test-TableId';
       const testHash = 'testHash';

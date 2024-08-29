@@ -157,4 +157,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
   }
 }
 
+// Allow reference to DynamoDb using the legacy DocumentClient
+DynamoDB.DocumentClient = DynamoDB;
+
 module.exports = { DynamoDB };
