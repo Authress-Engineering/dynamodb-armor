@@ -1,4 +1,5 @@
 const DynamoDbOriginal = require('aws-sdk/clients/dynamodb');
+const cloneDeep = require('lodash.clonedeep');
 
 process.env.AWS_NODEJS_CONNECTION_REUSE_ENABLED = 1;
 
@@ -25,6 +26,18 @@ function parseExpression(logger, expression, isMultiExpression) {
 
   return { keys: {}, values: {} };
 }
+
+function coerceExpressionAttributeNamesAndValues(parameters) {
+  const newParameters = cloneDeep(parameters);
+  Object.keys(newParameters.ExpressionAttributeValues || {}).map(key => {
+    if (newParameters.ExpressionAttributeValues[key] === undefined) {
+      newParameters.ExpressionAttributeValues[key] = null;
+    }
+  });
+  
+  return newParameters;
+}
+
 class DynamoDB extends DynamoDbOriginal.DocumentClient {
   constructor(args) {
     super(args);
@@ -35,7 +48,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
     if (!originalParams.Key) { throw new DynamoDbError({ error: 'Key not specified', parameters: originalParams }, 'InvalidParameters'); }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.get(params).promise().catch(error => {
@@ -53,7 +66,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
     if (!originalParams.KeyConditionExpression) { throw new DynamoDbError({ error: 'KeyConditionExpression not specified', parameters: originalParams }, 'InvalidParameters'); }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.query(params).promise().catch(error => {
@@ -76,7 +89,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
       // Validate the tokens
     }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.delete(params).promise().catch(error => {
@@ -99,7 +112,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
       // Validate the tokens
     }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.put(params).promise().catch(error => {
@@ -116,7 +129,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
   scan(originalParams) {
     if (!originalParams || !originalParams.TableName) { throw new DynamoDbError({ error: 'TableName not specified', parameters: originalParams }, 'InvalidParameters'); }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.scan(params).promise().catch(error => {
@@ -142,7 +155,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
       // Validate the tokens
     }
 
-    const params = originalParams;
+    const params = coerceExpressionAttributeNamesAndValues(originalParams);
     const capturedStack = { name: 'DynamoDB.update() Error:' };
     Error.captureStackTrace(capturedStack);
     const resultAsync = super.update(params).promise().catch(error => {

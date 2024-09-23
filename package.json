@@ -66,5 +66,8 @@
   "homepage": "https://rhosys.ch",
   "engines": {
     "node": ">=16"
+  },
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0"
   }
 }
