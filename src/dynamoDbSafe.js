@@ -119,7 +119,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
       // Do not log items that are too bit, it will just become a huge problem for the caller.
       const loggedParameters = error.code === 'ValidationException' && error.message === 'Item size has exceeded the maximum allowed size'
         ? { calculatedItemSize: JSON.stringify(originalParams).length }
-        : originalParams
+        : originalParams;
 
       const wrappedError = new DynamoDbError({ message: error.message, method: 'Put', parameters: loggedParameters, dynamoDbStack: error.stack }, error.code);
       wrappedError.stack = capturedStack;
@@ -167,7 +167,7 @@ class DynamoDB extends DynamoDbOriginal.DocumentClient {
       // Do not log items that are too bit, it will just become a huge problem for the caller.
       const loggedParameters = error.code === 'ValidationException' && error.message === 'Item size has exceeded the maximum allowed size'
         ? { calculatedItemSize: JSON.stringify(originalParams).length }
-        : originalParams
+        : originalParams;
 
       const wrappedError = new DynamoDbError({ message: error.message, method: 'Update', parameters: loggedParameters, dynamoDbStack: error.stack }, error.code);
       wrappedError.stack = capturedStack;
